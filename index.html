@@ -1,0 +1,552 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0"><title>人權通關站</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=DM+Mono:wght@500&display=swap">
+<style>
+/* Concept: 港口海關通關。夜色碼頭的插畫開場，每一關像護照頁，結束時蓋「放行／補件」章。 */
+:root {
+  --bg: #e9eff5;
+  --pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='60' viewBox='0 0 120 60'%3E%3Cpath d='M0 30 Q30 0 60 30 T120 30' fill='none' stroke='%2314263f' stroke-opacity='.06' stroke-width='1'/%3E%3Cpath d='M0 40 Q30 10 60 40 T120 40' fill='none' stroke='%2314263f' stroke-opacity='.05' stroke-width='1'/%3E%3Cpath d='M0 50 Q30 20 60 50 T120 50' fill='none' stroke='%2314263f' stroke-opacity='.04' stroke-width='1'/%3E%3C/svg%3E");
+  --surface: #ffffff;
+  --ink: #14263f;
+  --muted: #55657a;
+  --line: #d3dce6;
+  --shadow: 0 1px 0 rgba(20,38,63,.06), 0 8px 24px -12px rgba(20,38,63,.28);
+  --s1: #1f3a5f; --s2: #17806f; --s3: #a86a08; --s4: #bb4631; --s5: #61489c;
+  --t1: #e1e9f3; --t2: #dcefea; --t3: #f8ebd2; --t4: #f8e1db; --t5: #e8e2f4;
+  --ok: #1a7a45; --ok-bg: #e2f3e9;
+  --part: #8a5a00; --part-bg: #fbf0d6;
+  --bad: #b3402c; --bad-bg: #fbe5df;
+  --font: "Noto Sans TC", system-ui, "PingFang TC", "Microsoft JhengHei", sans-serif;
+  --mono: "DM Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0b1626;
+    --pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='60' viewBox='0 0 120 60'%3E%3Cpath d='M0 30 Q30 0 60 30 T120 30' fill='none' stroke='%23ffffff' stroke-opacity='.05' stroke-width='1'/%3E%3Cpath d='M0 40 Q30 10 60 40 T120 40' fill='none' stroke='%23ffffff' stroke-opacity='.04' stroke-width='1'/%3E%3Cpath d='M0 50 Q30 20 60 50 T120 50' fill='none' stroke='%23ffffff' stroke-opacity='.03' stroke-width='1'/%3E%3C/svg%3E");
+    --surface: #152640; --ink: #e8eef6; --muted: #9fb0c4; --line: #2a3d57;
+    --shadow: 0 1px 0 rgba(255,255,255,.04), 0 10px 26px -12px rgba(0,0,0,.7);
+    --s1: #8fb2e0; --s2: #4cc2b2; --s3: #f0b24a; --s4: #ee7d66; --s5: #b5a2e8;
+    --t1: #1b3050; --t2: #11393a; --t3: #3a2d12; --t4: #3e2019; --t5: #2a2447;
+    --ok: #5ccf8c; --ok-bg: #123526; --part: #f0c36a; --part-bg: #3a2e12; --bad: #ee7d66; --bad-bg: #3d1f19;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0b1626;
+  --pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='60' viewBox='0 0 120 60'%3E%3Cpath d='M0 30 Q30 0 60 30 T120 30' fill='none' stroke='%23ffffff' stroke-opacity='.05' stroke-width='1'/%3E%3Cpath d='M0 40 Q30 10 60 40 T120 40' fill='none' stroke='%23ffffff' stroke-opacity='.04' stroke-width='1'/%3E%3Cpath d='M0 50 Q30 20 60 50 T120 50' fill='none' stroke='%23ffffff' stroke-opacity='.03' stroke-width='1'/%3E%3C/svg%3E");
+  --surface: #152640; --ink: #e8eef6; --muted: #9fb0c4; --line: #2a3d57;
+  --shadow: 0 1px 0 rgba(255,255,255,.04), 0 10px 26px -12px rgba(0,0,0,.7);
+  --s1: #8fb2e0; --s2: #4cc2b2; --s3: #f0b24a; --s4: #ee7d66; --s5: #b5a2e8;
+  --t1: #1b3050; --t2: #11393a; --t3: #3a2d12; --t4: #3e2019; --t5: #2a2447;
+  --ok: #5ccf8c; --ok-bg: #123526; --part: #f0c36a; --part-bg: #3a2e12; --bad: #ee7d66; --bad-bg: #3d1f19;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background-color: var(--bg); background-image: var(--pattern);
+  color: var(--ink); font-family: var(--font); font-size: 16px; line-height: 1.65;
+  padding-block: 18px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { max-width: 34rem; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+p { margin: 0; }
+h1, h2 { margin: 0; outline: none; }
+h1 { font-size: clamp(2.5rem, 12vw, 3.4rem); line-height: 1.08; font-weight: 900; letter-spacing: .05em; }
+h2 { font-size: 1.28rem; line-height: 1.5; font-weight: 700; text-wrap: balance; }
+
+/* top bar */
+.brand { font-family: var(--mono); font-size: 12px; letter-spacing: .12em; color: var(--muted); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.chips { display: flex; gap: 6px; align-items: center; }
+.chip { font-family: var(--mono); font-size: 12px; letter-spacing: .04em; padding: 3px 10px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); color: var(--ink); white-space: nowrap; }
+.chip.hot { background: var(--part-bg); color: var(--part); border-color: var(--part); }
+.bar { height: 6px; border-radius: 999px; background: var(--line); overflow: hidden; }
+.bar > i { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--s1), var(--s2), var(--s3), var(--s4), var(--s5)); transition: width .5s ease; }
+
+/* passport */
+.passport { display: flex; gap: 8px; justify-content: space-between; }
+.slot { width: 48px; height: 48px; flex: none; display: grid; place-items: center; border-radius: 50%; background: var(--surface); border: 1.5px dashed var(--line); font-family: var(--mono); font-size: 13px; color: var(--muted); }
+.slot.now { border: 2px solid var(--ink); color: var(--ink); }
+
+/* hero */
+.scene { position: relative; border-radius: 18px; overflow: hidden; box-shadow: var(--shadow); line-height: 0; }
+.scene svg { width: 100%; height: auto; display: block; }
+.scene .big-stamp { position: absolute; right: 10px; bottom: 6px; filter: drop-shadow(0 2px 6px rgba(0,0,0,.35)); }
+.lead { color: var(--muted); max-width: 30rem; }
+.how { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.how div { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 10px 8px; text-align: center; font-size: 12.5px; line-height: 1.45; color: var(--muted); }
+.how b { display: block; font-size: 1.15rem; color: var(--ink); font-family: var(--mono); font-weight: 500; }
+
+/* stage banner */
+.banner { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 8px; border-radius: 16px; padding: 14px 16px 14px 18px; box-shadow: var(--shadow); overflow: hidden; }
+.banner .num { font-family: var(--mono); font-size: 13px; letter-spacing: .1em; }
+.banner .name { font-size: 1.6rem; font-weight: 900; letter-spacing: .06em; line-height: 1.2; }
+.banner .dots { display: flex; gap: 5px; margin-top: 8px; }
+.banner .dots i { width: 22px; height: 6px; border-radius: 99px; background: currentColor; opacity: .22; }
+.banner .dots i.on { opacity: 1; }
+.banner svg { width: 92px; height: auto; display: block; }
+
+/* question card */
+.card { background: var(--surface); border-radius: 16px; box-shadow: var(--shadow); padding: 18px 18px 20px; display: flex; flex-direction: column; gap: 14px; border: 1px solid var(--line); }
+.ctx { color: var(--ink); font-size: .95rem; padding-bottom: 14px; border-bottom: 2px dashed var(--line); }
+.opts { display: flex; flex-direction: column; gap: 10px; }
+.opt {
+  font: inherit; text-align: left; color: var(--ink); background: var(--bg);
+  border: 1.5px solid var(--line); border-radius: 12px; padding: 12px 14px 12px 12px; min-height: 52px; cursor: pointer;
+  display: flex; gap: 12px; align-items: center; transition: transform .12s ease, border-color .12s ease;
+}
+.opt:hover:not(:disabled) { border-color: var(--ink); transform: translateY(-1px); }
+.opt:active:not(:disabled) { transform: translateY(1px); }
+.opt:disabled { cursor: default; }
+.opt .mark { width: 30px; height: 30px; flex: none; border-radius: 50%; display: grid; place-items: center; font-family: var(--mono); font-size: 14px; font-weight: 500; background: var(--surface); border: 1.5px solid var(--line); }
+.opt.best { border-color: var(--ok); background: var(--ok-bg); }
+.opt.best .mark { background: var(--ok); border-color: var(--ok); color: var(--surface); font-weight: 900; }
+.opt.picked-bad { border-color: var(--bad); background: var(--bad-bg); animation: shake .35s; }
+.opt.picked-bad .mark { background: var(--bad); border-color: var(--bad); color: var(--surface); font-weight: 900; }
+.opt.picked-part { border-color: var(--part); background: var(--part-bg); }
+.opt.picked-part .mark { background: var(--part); border-color: var(--part); color: var(--surface); font-weight: 900; }
+.opt.dim { opacity: .6; }
+.opt.sel { border-color: var(--ink); background: var(--surface); box-shadow: inset 0 0 0 1.5px var(--ink); }
+.opt.sel .mark { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+.btn:disabled { opacity: .4; cursor: not-allowed; box-shadow: none; }
+button:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+.fb { border-radius: 12px; padding: 13px 15px; font-size: .96rem; animation: rise .3s ease; }
+.fb strong { display: block; margin-bottom: 2px; font-size: 1rem; }
+.fb.ok { background: var(--ok-bg); } .fb.ok strong { color: var(--ok); }
+.fb.part { background: var(--part-bg); } .fb.part strong { color: var(--part); }
+.fb.bad { background: var(--bad-bg); } .fb.bad strong { color: var(--bad); }
+.btn {
+  font: inherit; font-weight: 700; width: 100%; min-height: 52px; border-radius: 12px; border: 0; cursor: pointer;
+  background: var(--ink); color: var(--bg); padding: 12px 16px; letter-spacing: .04em;
+  box-shadow: 0 4px 0 rgba(0,0,0,.28); transition: transform .1s ease, box-shadow .1s ease;
+}
+.btn:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,.28); }
+
+/* results */
+.result { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; padding: 6px 0; }
+.result .kicker { font-family: var(--mono); font-size: 13px; letter-spacing: .08em; }
+.score { font-family: var(--mono); font-size: 2.8rem; font-weight: 500; line-height: 1; }
+.score small { font-size: 1rem; color: var(--muted); }
+.rank { font-size: 1.8rem; font-weight: 900; letter-spacing: .08em; }
+.recap { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; text-align: left; border-radius: 14px; padding: 14px 16px; width: 100%; }
+.recap svg { width: 64px; height: auto; }
+.stamps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; width: 100%; }
+.stamps figure { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 11px; color: var(--muted); line-height: 1.3; }
+.stamps svg { width: 100%; max-width: 64px; height: auto; }
+.take { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); padding: 14px 16px 14px 36px; margin: 0; display: flex; flex-direction: column; gap: 8px; font-size: .95rem; text-align: left; }
+.take li::marker { color: var(--muted); font-family: var(--mono); }
+.foot { font-size: 12px; color: var(--muted); }
+.hint { font-size: 12.5px; color: var(--muted); text-align: center; }
+.sec-h { font-size: 1.05rem; font-weight: 900; letter-spacing: .06em; margin-top: 8px; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.sec-h small { font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--muted); letter-spacing: .04em; }
+details.case { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); text-align: left; width: 100%; overflow: hidden; }
+details.case > summary { list-style: none; cursor: pointer; display: flex; gap: 10px; align-items: center; padding: 12px 14px; min-height: 54px; }
+details.case > summary::-webkit-details-marker { display: none; }
+.case .tag { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; padding: 3px 9px; border-radius: 8px; flex: none; }
+.case .ttl { font-weight: 700; flex: 1; min-width: 0; }
+.case .chev { flex: none; color: var(--muted); font-size: 1.3rem; line-height: 1; transition: transform .2s; }
+details.case[open] .chev { transform: rotate(90deg); }
+.case dl { margin: 0; padding: 2px 14px 14px; display: grid; grid-template-columns: 2.6em 1fr; gap: 8px 12px; font-size: .94rem; }
+.case dt { font-weight: 700; font-size: .85rem; letter-spacing: .04em; padding-top: 2px; }
+.case dd { margin: 0; min-width: 0; }
+.rev { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; text-align: left; display: flex; flex-direction: column; gap: 6px; font-size: .94rem; box-shadow: var(--shadow); width: 100%; }
+.rev .q { font-weight: 700; }
+.rev .st { font-family: var(--mono); font-size: 12px; color: var(--muted); letter-spacing: .06em; }
+.rev .you { color: var(--bad); } .rev .ans { color: var(--ok); }
+.field { display: flex; flex-direction: column; gap: 4px; width: 100%; text-align: left; }
+.field label { font-size: 13px; color: var(--muted); }
+.field input { font: inherit; font-size: 16px; padding: 11px 13px; border-radius: 10px; border: 1.5px solid var(--line); background: var(--surface); color: var(--ink); }
+.field input:focus-visible { outline: 3px solid var(--ink); outline-offset: 1px; }
+.sc { position: relative; overflow: hidden; border-radius: 22px; padding: 22px 16px 16px; color: #fff; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; background: linear-gradient(160deg, #0b1e3a, #16406a 55%, #1d6f78); box-shadow: var(--shadow); width: 100%; outline: none; }
+.sc::before { content: ""; position: absolute; inset: 0; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='60' viewBox='0 0 120 60'%3E%3Cpath d='M0 30 Q30 0 60 30 T120 30' fill='none' stroke='%23ffffff' stroke-opacity='.08' stroke-width='1'/%3E%3Cpath d='M0 42 Q30 12 60 42 T120 42' fill='none' stroke='%23ffffff' stroke-opacity='.06' stroke-width='1'/%3E%3C/svg%3E"); }
+.sc > * { position: relative; }
+.sc .t { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; opacity: .8; }
+.sc .rk { font-size: 1.9rem; font-weight: 900; letter-spacing: .08em; line-height: 1.2; }
+.sc .sn { font-family: var(--mono); font-size: 2.2rem; line-height: 1; }
+.sc .sg { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; width: 100%; margin-top: 4px; }
+.sc .sg figure { margin: 0; display: flex; flex-direction: column; align-items: center; font-size: 11px; opacity: .92; gap: 2px; }
+.sc .sg svg { width: 100%; max-width: 56px; height: auto; }
+.sc .nt { font-size: .98rem; text-wrap: balance; border-top: 1px dashed rgba(255,255,255,.38); padding-top: 10px; margin-top: 4px; width: 100%; overflow-wrap: anywhere; }
+.sc .nm { font-size: .85rem; opacity: .85; }
+.sc .ft { font-size: 10.5px; opacity: .65; letter-spacing: .04em; margin-top: 4px; }
+.pop { animation: pop .42s cubic-bezier(.2, .9, .3, 1.25); }
+@keyframes pop { from { transform: scale(1.6) rotate(8deg); opacity: 0; } }
+@keyframes shake { 25% { transform: translateX(-5px); } 50% { transform: translateX(5px); } 75% { transform: translateX(-3px); } }
+@keyframes rise { from { transform: translateY(8px); opacity: 0; } }
+@keyframes float { 50% { transform: translateY(-4px); } }
+.float { animation: float 3.2s ease-in-out infinite; }
+canvas#fx { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 20; }
+@media (prefers-reduced-motion: reduce) { .pop, .fb, .float, .opt.picked-bad { animation: none; } .bar > i, .opt, .btn { transition: none; } }
+</style>
+
+<canvas id="fx" aria-hidden="true"></canvas>
+<main class="wrap" id="app"></main>
+
+<script>
+const STAGES = [
+  { name: "人權基礎", c: "--s1", t: "--t1", recap: "人權是權利，不是施捨；SDGs 細項有九成以上源自國際人權公約。" },
+  { name: "公司治理", c: "--s2", t: "--t2", recap: "透明度、責任制、公平原則，是解決代理問題的三個核心。" },
+  { name: "供應鏈", c: "--s3", t: "--t3", recap: "合法不等於符合國際人權標準，供應鏈任何一環出問題都可能被扣貨。" },
+  { name: "性別與吹哨", c: "--s4", t: "--t4", recap: "玻璃天花板限制女性升遷；吹哨者需要被保護，而不是被報復。" },
+  { name: "情境題", c: "--s5", t: "--t5", recap: "面對高成本的改變，先評估長期風險與報酬，再用溝通與以身作則推動。" }
+];
+
+/* ---------- illustrations ---------- */
+const ILL = [
+  c => `<svg viewBox="0 0 120 90" aria-hidden="true"><path d="M12 56 Q60 -8 108 56" fill="none" style="stroke:var(${c})" stroke-width="3" stroke-dasharray="2 6" stroke-linecap="round"/>
+    <g style="fill:var(${c})"><circle cx="30" cy="40" r="8"/><path d="M17 74a13 13 0 0 1 26 0v4H17z"/><circle cx="60" cy="30" r="10"/><path d="M44 78a16 16 0 0 1 32 0v4H44z"/><circle cx="90" cy="40" r="8"/><path d="M77 74a13 13 0 0 1 26 0v4H77z"/></g></svg>`,
+  c => `<svg viewBox="0 0 120 90" aria-hidden="true"><rect x="22" y="14" width="40" height="66" rx="3" style="fill:var(${c})"/>
+    <g style="fill:var(--surface)"><rect x="29" y="22" width="8" height="8"/><rect x="47" y="22" width="8" height="8"/><rect x="29" y="38" width="8" height="8"/><rect x="47" y="38" width="8" height="8"/><rect x="29" y="54" width="8" height="8"/><rect x="47" y="54" width="8" height="8"/><rect x="38" y="68" width="10" height="12"/></g>
+    <rect x="68" y="34" width="34" height="44" rx="3" style="fill:var(--surface);stroke:var(${c})" stroke-width="2.5"/>
+    <path d="M74 46h22M74 54h22M74 62h14" style="stroke:var(${c})" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="96" cy="30" r="12" style="fill:var(${c})"/><path d="M90 30l4 4 7-8" fill="none" style="stroke:var(--surface)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  c => `<svg viewBox="0 0 120 90" aria-hidden="true"><rect x="94" y="14" width="5" height="52" style="fill:var(--ink)"/><rect x="58" y="14" width="44" height="5" style="fill:var(--ink)"/><path d="M68 19v14" style="stroke:var(--ink)" stroke-width="1.5"/>
+    <g><rect x="62" y="33" width="14" height="12" style="fill:var(${c})"/><rect x="14" y="48" width="22" height="18" style="fill:var(${c})"/><rect x="38" y="48" width="22" height="18" style="fill:var(--ink);opacity:.75"/><rect x="62" y="48" width="22" height="18" style="fill:var(${c});opacity:.7"/><rect x="25" y="30" width="22" height="18" style="fill:var(--ink);opacity:.5"/><rect x="49" y="30" width="10" height="18" style="fill:var(${c});opacity:.85"/></g>
+    <path d="M6 68h108l-12 14H18z" style="fill:var(--ink)"/><path d="M4 86q10-5 20 0t20 0 20 0 20 0 20 0" fill="none" style="stroke:var(${c})" stroke-width="2.5" stroke-linecap="round"/></svg>`,
+  c => `<svg viewBox="0 0 120 90" aria-hidden="true"><g style="stroke:var(--ink)" stroke-width="3" stroke-linecap="round"><path d="M38 82V8M76 82V8"/><path d="M38 70h38M38 56h38M38 42h38M38 28h38M38 14h38" stroke-width="2.5"/></g>
+    <rect x="16" y="32" width="88" height="8" rx="2" style="fill:var(${c});opacity:.3;stroke:var(${c})" stroke-width="2" stroke-dasharray="5 4"/>
+    <g style="fill:var(${c})"><circle cx="57" cy="62" r="6"/><path d="M48 80a9 9 0 0 1 18 0z"/></g>
+    <path d="M57 50V42" style="stroke:var(${c})" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 5"/></svg>`,
+  c => `<svg viewBox="0 0 120 90" aria-hidden="true"><rect x="10" y="52" width="62" height="28" style="fill:var(--ink)"/><rect x="52" y="26" width="11" height="28" style="fill:var(--ink)"/>
+    <path d="M10 52l14-12v12l14-12v12l14-12v12z" style="fill:var(--ink)"/>
+    <g style="fill:var(--surface)"><rect x="18" y="62" width="9" height="8"/><rect x="33" y="62" width="9" height="8"/><rect x="48" y="62" width="9" height="8"/></g>
+    <g style="fill:var(--muted)"><circle cx="58" cy="18" r="5" opacity=".7"/><circle cx="68" cy="10" r="7" opacity=".45"/><circle cx="80" cy="6" r="6" opacity=".25"/></g>
+    <path d="M84 78C84 50 106 40 112 40c0 24-10 40-28 38z" style="fill:var(${c})"/><path d="M84 78c6-12 14-22 24-34" fill="none" style="stroke:var(--surface)" stroke-width="2" stroke-linecap="round"/></svg>`
+];
+
+/* ---------- questions ---------- */
+const TF = (t, answer, why) => ({
+  st: 2, text: t, shuffle: false,
+  opts: [{ t: "對", p: answer ? 1 : 0, fb: why }, { t: "錯", p: answer ? 0 : 1, fb: why }]
+});
+const PRINCIPLES = (text, right, why) => ({
+  st: 1, text, shuffle: false,
+  opts: ["透明度", "責任制", "公平原則"].map(n => ({ t: n, p: n === right ? 1 : 0, fb: n === right ? why : "不太對。" + why }))
+});
+const QS = [
+  { st: 0, text: "講者說，現在談人權，最貼近下列哪一種觀念？", shuffle: true, opts: [
+    { t: "做公益，對弱勢的人好一點", p: 0, fb: "這是早期把人權當成慈善的想法，講者說現在已經不適合。" },
+    { t: "只要身為人，就有基本權利，要被尊重、不被歧視", p: 1, fb: "台灣已通過六大人權公約，重點是權利，不是施捨。" },
+    { t: "只有政府機關需要關心人權", p: 0, fb: "企業同樣要面對人權，講者提醒同學進入企業後就會碰到。" }
+  ]},
+  { st: 0, text: "聯合國 17 項永續發展目標（SDGs）的細項，有多少源自國際人權公約？", shuffle: false, opts: [
+    { t: "約三成", p: 0, fb: "講者說的是九成以上。" },
+    { t: "約五成", p: 0, fb: "講者說的是九成以上。" },
+    { t: "九成以上", p: 1, fb: "所以人權是 SDGs 與 ESG 的基礎，懂人權就不難理解 ESG。" }
+  ]},
+  { ...PRINCIPLES("公開財報與重大資訊，最接近哪一項公司治理原則？", "透明度", "把公司內部隱藏的事揭露出來，股東才看得到真實狀況。"), ctx: "公司治理要解決的是「代理問題」：管理階層與股東資訊不對等，彼此權益容易受損。" },
+  PRINCIPLES("像博達案那樣，企業高層掏空公司資產，需要負起法律責任。這最接近哪一項原則？", "責任制", "董事會與經營高層要為決策扛起責任，用法規約束才杜絕得了公款變私款。"),
+  PRINCIPLES("大股東知道公司即將被收購，先偷偷買進股票。這違反哪一項原則？", "公平原則", "這是內線交易，對小股東不公平，賺的錢要吐回來，還可能被判刑，最高十年。"),
+  TF("「我們每件事都符合台灣法令，所以不會有人權問題。」", false, "講者強調，合法不一定符合國際人權標準，各國現在看的是國際標準。"),
+  TF("供應商或零組件廠有強迫勞動，成品也可能在海關被扣。", true, "國際看的是整條供應鏈，任何一環出問題都可能被扣留。"),
+  TF("外國單位一定要親自到台灣調查，才能發出暫扣令。", false, "講者說，只要訪問幾位移工，或收到電話、email 的申訴，就能發出暫扣令。"),
+  TF("貨物被暫扣後，企業要自己舉證沒有問題，暫扣令才可能取消。", true, "責任轉到企業身上，要自己提出證明。捷安特後來改善並取消了暫扣令。"),
+  { st: 3, text: "女性升遷到高階主管時，常被看不見的限制擋住。這個現象叫什麼？", shuffle: true, opts: [
+    { t: "玻璃天花板", p: 1, fb: "女性在董事會約三成，到最高管理階層更少。講者也提到，許多女性因照顧家人離開職場後難以回歸。" },
+    { t: "防火牆", p: 0, fb: "防火牆是資訊安全的用語，這裡指的是玻璃天花板。" },
+    { t: "利益迴避", p: 0, fb: "利益迴避是治理上的另一個概念，這裡指的是玻璃天花板。" }
+  ]},
+  { st: 3, text: "員工揭發公司使用過期麵粉。企業最應該先問什麼？", shuffle: true, opts: [
+    { t: "公司是不是真的有使用過期麵粉？", p: 1, fb: "講者說，吹哨者揭發問題其實是企業改進的動力，不該變成被報復的對象。" },
+    { t: "這個員工是不是想報復公司？", p: 0, fb: "這是企業常見的反應，但真正該先確認的是事實。" },
+    { t: "要怎麼讓網路上的人知道他是誰？", p: 0, fb: "把吹哨者攤在網路上，只會讓更多人不敢說話。" }
+  ]},
+  { st: 4, text: "你是 B 壽險的 ESG 投資長，會怎麼做？", ctx: "A 鋼鐵廠是上市公司，獲利很高，但碳排也很高。大股東 B 壽險建議換掉高碳排高爐，要花數百億，A 廠董事長說短期報酬率會下降。", shuffle: true, opts: [
+    { t: "與其他股東、董事會一起評估長期風險與報酬，再決定怎麼換", p: 2, fb: "最貼近課堂上被肯定的思路：把風險、環境與未來報酬一起考量。" },
+    { t: "要求立刻全換，成本由 A 廠自己吞", p: 1, fb: "方向沒錯，但沒有顧到報酬與其他股東。同學提醒，這種事要大家一起討論。" },
+    { t: "不用管，反正現在賺錢", p: 0, fb: "講者說現在看的是十年以上，忽略環境風險，可能變成被國際抵制的對象。" },
+    { t: "直接賣掉股票退場", p: 0, fb: "賣掉就少了改變公司的機會，機構投資人其實可以直接要求公司對環境與人權做出貢獻。" }
+  ]},
+  { st: 4, text: "你是 C 公司的董事長，會怎麼處理？", ctx: "C 科技是年收百億的家族企業，董事會全是家族成員。為了符合公司治理，公司請了一位 ESG 專長的女性獨立董事。她要求做氣候風險評估，並建議提撥 20% 年終獎金專門推動碳減量，家族董事強烈不滿。", shuffle: true, opts: [
+    { t: "先接受氣候風險評估，自己先拿出獎金示範，再說服家族成員", p: 2, fb: "這是課堂上同學的答案，講者很肯定：碳排是長期目標，以身作則再說服其他人。" },
+    { t: "先口頭同意，但要求等景氣好再說", p: 1, fb: "沒有直接拒絕，但只是延後，問題還在。" },
+    { t: "全部拒絕，維持現狀", p: 0, fb: "不做氣候風險評估，長期可能面臨更大的風險。" },
+    { t: "換掉這位獨董，找比較聽話的人", p: 0, fb: "公司治理要求董事會不能集中在家族，獨董就是來制衡的。" }
+  ]}
+];
+
+const CASES = [
+  { st: 0, title: "海地一家人", rows: [
+    ["事件", "海地政局惡化，一家人因為有成員被抓而逃到台灣，才發現台灣沒有難民法，變成非法居留。"],
+    ["求助", "他們向國家人權委員會求助，請求不要被遣返，否則生命有危險。"],
+    ["重點", "人權會只處理在台灣境內的人權議題，但不限於台灣人。講者沒有提到最後的結果。"]
+  ]},
+  { st: 1, title: "博達案", rows: [
+    ["事件", "企業高階人士掏空公司資產，公款變私款、公庫變私庫。"],
+    ["問題", "公司沒有良好的公司治理，內部人很容易把賺的錢放進自己口袋。"],
+    ["對策", "證交法規定，董監事與經理人違反股東權益的重大事項又沒有揭露，要負刑責與罰款；內線交易最高可關十年。"]
+  ]},
+  { st: 2, title: "紡織業被呼籲禁止進口", rows: [
+    ["事件", "前年，國際團體來函人權會、經濟部與勞動部，指出台灣紡織業有人權問題，並要求國際品牌不要進口台灣的紡織品。"],
+    ["問題", "移工在母國被收高額仲介費，來台時就背負債務，為了還債拚命工作，有人過勞甚至死亡；也有公司扣薪或延遲發薪。"],
+    ["重點", "只有幾家公司有問題，卻影響整個國家的出口。講者說，要等到改善後才可能恢復。"]
+  ]},
+  { st: 2, title: "漁業與歐盟警告", rows: [
+    ["事件", "台灣漁業僱用許多外籍漁工，薪水沒有按時發放，也有不少違反人權的情況。"],
+    ["結果", "台灣被列入黑名單，歐盟曾亮牌警告，漁獲一度不能進入歐盟市場。"],
+    ["重點", "人權問題會直接變成出口問題。"]
+  ]},
+  { st: 2, title: "捷安特被暫扣", rows: [
+    ["事件", "去年，捷安特的單車進口美國時，在海關被暫扣。"],
+    ["原因", "美國調查指出三類問題：移工的債務束縛、扣留工資與嚴重超時加班、宿舍條件不佳。"],
+    ["結果", "講者說，企業後來承認並改善，調整聘僱政策、改善住宿環境，暫扣令已經取消。"],
+    ["提醒", "企業當時強調做的每件事都合法，但講者說，合法不一定合乎國際人權標準。"]
+  ]},
+  { st: 3, title: "回不去的職場", rows: [
+    ["事件", "人權會的專案調查發現，許多女性結婚後因照顧小孩、長輩或公婆，退出職場。"],
+    ["問題", "想重回職場時很困難，甚至得比原本的職位降一階才進得去。"],
+    ["重點", "再加上高階職位的女性比例偏低，就形成講者說的「玻璃天花板」。"]
+  ]},
+  { st: 4, title: "四大基金的投資標準", rows: [
+    ["事件", "英國 NGO 的台灣據點「環境正義基金會」，希望郵政儲金、勞動基金、勞退基金、勞保基金、退撫基金不要投資石化等污染環境的產業，除非這些企業對環境有貢獻。"],
+    ["作法", "講者說，金管會已推動：機構投資人可以直接要求上市櫃公司對環境與人權做出貢獻。"],
+    ["重點", "投資人也是推動 ESG 的力量，就像題目裡的 B 壽險。"]
+  ]}
+];
+
+const MAXP = QS.map(q => Math.max(...q.opts.map(o => o.p)));
+const TOTAL_MAX = MAXP.reduce((a, b) => a + b, 0);
+const stageMax = STAGES.map((_, s) => QS.reduce((a, q, i) => a + (q.st === s ? MAXP[i] : 0), 0));
+let qi = 0, total = 0, streak = 0, wrongs = [], sScore = [0, 0, 0, 0, 0];
+
+const app = document.getElementById("app");
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const passed = s => sScore[s] >= stageMax[s] * 0.6;
+
+/* ---------- stamp ---------- */
+function stamp(s, size, label, force, colOv) {
+  const ok = force === undefined ? passed(s) : force, st = STAGES[s];
+  const col = colOv || (ok ? `var(${st.c})` : "var(--muted)");
+  const word = ok ? "放行" : "補件";
+  return `<svg viewBox="0 0 100 100" width="${size}" height="${size}" role="img" aria-label="${st.name}${word}">
+    <g transform="rotate(-10 50 50)" style="stroke:${col};fill:none">
+      <circle cx="50" cy="50" r="46" stroke-width="3.5" ${ok ? "" : 'stroke-dasharray="6 5"'}/>
+      <circle cx="50" cy="50" r="39" stroke-width="1.2"/>
+      <text x="50" y="${label ? 55 : 60}" text-anchor="middle" font-size="${label ? 24 : 28}" font-weight="900" stroke="none" style="fill:${col}">${word}</text>
+      ${label ? `<text x="50" y="75" text-anchor="middle" font-size="10" font-weight="700" stroke="none" style="fill:${col}">${st.name}</text>` : ""}
+    </g></svg>`;
+}
+
+/* ---------- port scene ---------- */
+const SCENE = `<svg viewBox="0 0 360 210" role="img" aria-label="夜晚的港口，吊車與貨櫃，海關柵欄抬起">
+  <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b1e3a"/><stop offset=".62" stop-color="#2d5f8c"/><stop offset="1" stop-color="#e8a56a"/></linearGradient></defs>
+  <rect width="360" height="210" fill="url(#sky)"/>
+  <circle cx="292" cy="44" r="17" fill="#f6ebcb"/><circle cx="299" cy="40" r="15" fill="#13294a" opacity=".55"/>
+  <g fill="#fff" opacity=".8"><circle cx="40" cy="26" r="1.2"/><circle cx="96" cy="14" r="1"/><circle cx="150" cy="34" r="1.3"/><circle cx="214" cy="18" r="1"/><circle cx="250" cy="60" r="1"/><circle cx="330" cy="82" r="1.1"/><circle cx="22" cy="70" r="1"/></g>
+  <g fill="#102a47" opacity=".9"><rect x="0" y="112" width="28" height="30"/><rect x="30" y="100" width="22" height="42"/><rect x="54" y="118" width="34" height="24"/><rect x="250" y="106" width="26" height="36"/><rect x="278" y="120" width="40" height="22"/><rect x="320" y="98" width="40" height="44"/></g>
+  <g fill="#ffd36b" opacity=".85"><rect x="34" y="108" width="3" height="3"/><rect x="42" y="118" width="3" height="3"/><rect x="256" y="114" width="3" height="3"/><rect x="326" y="108" width="3" height="3"/><rect x="340" y="120" width="3" height="3"/></g>
+  <rect y="142" width="360" height="68" fill="#0a2038"/>
+  <g stroke="#3f7bb0" stroke-width="1.6" fill="none" opacity=".55" stroke-linecap="round"><path d="M0 154q15-5 30 0t30 0 30 0 30 0 30 0 30 0 30 0 30 0 30 0 30 0 30 0 30 0"/><path d="M10 164q15-5 30 0t30 0 30 0 30 0 30 0 30 0 30 0 30 0 30 0"/></g>
+  <rect y="176" width="360" height="34" fill="#071a2e"/>
+  <g>
+    <rect x="132" y="146" width="42" height="20" fill="#5b8fd6"/><rect x="176" y="146" width="42" height="20" fill="#34b3a0"/><rect x="220" y="146" width="42" height="20" fill="#e3a02f"/>
+    <rect x="154" y="126" width="42" height="20" fill="#e0674f"/><rect x="198" y="126" width="42" height="20" fill="#8c73d1"/>
+    <g stroke="#000" stroke-opacity=".25" stroke-width="1.5"><path d="M140 146v20M148 146v20M156 146v20M164 146v20M184 146v20M192 146v20M200 146v20M208 146v20M228 146v20M236 146v20M244 146v20M252 146v20M162 126v20M170 126v20M178 126v20M186 126v20M206 126v20M214 126v20M222 126v20M230 126v20"/></g>
+  </g>
+  <g stroke="#e9b44c" stroke-width="5" stroke-linecap="square"><path d="M48 176V64M92 176V64"/></g>
+  <rect x="30" y="56" width="190" height="9" fill="#e9b44c"/><path d="M48 64l22-8 22 8" fill="none" stroke="#e9b44c" stroke-width="3"/>
+  <path d="M196 65v28" stroke="#cfd8e3" stroke-width="1.6"/><rect x="186" y="93" width="20" height="5" fill="#cfd8e3"/>
+  <g class="float"><rect x="187" y="98" width="18" height="12" fill="#e0674f"/></g>
+  <circle cx="60" cy="52" r="2.5" fill="#ff6b5c"/>
+  <rect x="296" y="120" width="9" height="62" rx="2" fill="#dfe6ee"/><rect x="288" y="150" width="25" height="32" fill="#16406a"/><rect x="293" y="157" width="15" height="10" fill="#ffd36b"/>
+  <path d="M305 124 L348 98" stroke="#e5483b" stroke-width="7" stroke-linecap="round"/><path d="M305 124 L348 98" stroke="#fff" stroke-width="7" stroke-linecap="butt" stroke-dasharray="7 9"/>
+  <rect x="0" y="184" width="360" height="26" fill="#050f1c"/><path d="M0 196h360" stroke="#ffd36b" stroke-width="2" stroke-dasharray="14 12" opacity=".7"/>
+</svg>`;
+
+/* ---------- helpers ---------- */
+function passport(done, now) {
+  let h = '<div class="passport" role="img" aria-label="通關護照">';
+  for (let s = 0; s < 5; s++) {
+    if (s < done) h += `<div class="slot">${stamp(s, 42, false)}</div>`;
+    else h += `<div class="slot ${s === now ? "now" : ""}">${s + 1}</div>`;
+  }
+  return h + "</div>";
+}
+function topbar(extra) {
+  const pct = Math.round((qi / QS.length) * 100);
+  return `<div class="brand"><span>HUMAN RIGHTS CHECKPOINT</span><span class="chips">${streak >= 2 ? `<span class="chip hot">連對 ×${streak}</span>` : ""}<span class="chip">${total} 分</span></span></div>
+    <div class="bar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100" aria-label="整體進度"><i style="width:${extra === "full" ? 100 : pct}%"></i></div>`;
+}
+function mount(html, focusSel) {
+  app.innerHTML = html;
+  window.scrollTo(0, 0);
+  const f = app.querySelector(focusSel || "h1,h2");
+  if (f) { f.setAttribute("tabindex", "-1"); f.focus({ preventScroll: true }); }
+}
+
+function caseHTML(c, i, open) {
+  const st = STAGES[c.st];
+  return `<details class="case" ${open ? "open" : ""}><summary><span class="tag" style="background:var(${st.t});color:var(${st.c})">檔案 ${String(i + 1).padStart(2, "0")}</span><span class="ttl">${c.title}</span><span class="chev" aria-hidden="true">›</span></summary>
+    <dl>${c.rows.map(r => `<dt style="color:var(${st.c})">${r[0]}</dt><dd>${r[1]}</dd>`).join("")}</dl></details>`;
+}
+
+/* ---------- confetti ---------- */
+function confetti(colors, n) {
+  if (reduce) return;
+  const cv = document.getElementById("fx"), cx = cv.getContext("2d");
+  const dpr = window.devicePixelRatio || 1;
+  cv.width = innerWidth * dpr; cv.height = innerHeight * dpr; cx.scale(dpr, dpr);
+  const ps = Array.from({ length: n }, () => ({
+    x: innerWidth / 2 + (Math.random() - .5) * 80, y: innerHeight * .38,
+    vx: (Math.random() - .5) * 11, vy: -Math.random() * 11 - 3,
+    w: 6 + Math.random() * 6, h: 4 + Math.random() * 5, r: Math.random() * 6, vr: (Math.random() - .5) * .4,
+    c: colors[Math.floor(Math.random() * colors.length)]
+  }));
+  const t0 = performance.now();
+  (function tick(t) {
+    const k = t - t0;
+    cx.clearRect(0, 0, innerWidth, innerHeight);
+    ps.forEach(p => { p.vy += .32; p.x += p.vx; p.y += p.vy; p.vx *= .99; p.r += p.vr;
+      cx.save(); cx.translate(p.x, p.y); cx.rotate(p.r); cx.globalAlpha = Math.max(0, 1 - k / 2200); cx.fillStyle = p.c; cx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); cx.restore(); });
+    if (k < 2200) requestAnimationFrame(tick); else cx.clearRect(0, 0, innerWidth, innerHeight);
+  })(t0);
+}
+const CONF = ["#5b8fd6", "#34b3a0", "#e3a02f", "#e0674f", "#8c73d1", "#f6ebcb"];
+
+/* ---------- screens ---------- */
+function start() {
+  mount(`
+    <div class="brand"><span>HUMAN RIGHTS CHECKPOINT</span><span class="chip">5 關 · ${QS.length} 題</span></div>
+    <div class="scene">${SCENE}<div class="big-stamp pop" aria-hidden="true">${stamp(1, 96, false, true)}</div></div>
+    <h1>人權<br>通關站</h1>
+    <p class="lead">依「人權與公司治理及 ESG 社會責任」演講設計。你是港口的海關人員，每一關要判斷貨物能不能放行。</p>
+    <div class="how"><div><b>5</b>關卡<br>每關蓋一枚章</div><div><b>60%</b>答對就「放行」<br>不到就「補件」</div><div><b>${TOTAL_MAX}</b>滿分<br>最後有稱號</div></div>
+    ${passport(0, 0)}
+    <button class="btn" id="go">開始通關</button>
+    <p class="foot">演講：國家人權委員會執行秘書 鄒筱涵。題目與解說依課堂內容整理，非官方測驗。</p>`, "h1");
+  document.getElementById("go").onclick = () => { qi = 0; total = 0; streak = 0; wrongs = []; sScore = [0, 0, 0, 0, 0]; question(); };
+}
+
+function question() {
+  const q = QS[qi], st = STAGES[q.st];
+  const inStage = QS.filter(x => x.st === q.st).length;
+  const pos = QS.slice(0, qi).filter(x => x.st === q.st).length + 1;
+  const opts = q.shuffle ? shuffle(q.opts) : q.opts;
+  const max = MAXP[qi];
+  mount(`
+    ${topbar()}
+    ${passport(q.st, q.st)}
+    <div class="banner" style="background:var(${st.t});color:var(${st.c})">
+      <div><div class="num">關卡 ${q.st + 1}／5</div><div class="name">${st.name}</div>
+        <div class="dots" aria-label="第 ${pos} 題，共 ${inStage} 題">${Array.from({ length: inStage }, (_, i) => `<i class="${i < pos ? "on" : ""}"></i>`).join("")}</div></div>
+      ${ILL[q.st](st.c)}
+    </div>
+    <section class="card">
+      <h2>${q.text}</h2>
+      ${q.ctx ? `<p class="ctx">${q.ctx}</p>` : ""}
+      <div class="opts">${opts.map((o, i) => `<button class="opt" data-i="${i}"><span class="mark" aria-hidden="true">${"ABCD"[i]}</span><span>${o.t}</span></button>`).join("")}</div>
+      <button class="btn" id="submit" disabled>請先選擇一個答案</button>
+      <div id="fb" aria-live="polite"></div>
+      <button class="btn" id="next" hidden></button>
+    </section>`, "h2");
+
+  const btns = [...app.querySelectorAll(".opt")];
+  const sub = document.getElementById("submit");
+  let sel = null, locked = false;
+  btns.forEach(x => x.onclick = () => {
+    if (locked) return;
+    sel = x;
+    btns.forEach(y => { y.classList.toggle("sel", y === x); y.setAttribute("aria-pressed", y === x ? "true" : "false"); });
+    sub.disabled = false; sub.textContent = "送出答案";
+  });
+  sub.onclick = () => {
+    if (!sel || locked) return;
+    locked = true;
+    const b = sel;
+    b.classList.remove("sel");
+    btns.forEach(y => y.removeAttribute("aria-pressed"));
+    sub.hidden = true;
+    const o = opts[+b.dataset.i];
+    btns.forEach((x, i) => {
+      x.disabled = true;
+      if (opts[i].p === max) { x.classList.add("best"); x.querySelector(".mark").textContent = "✓"; }
+      else if (x !== b) x.classList.add("dim");
+    });
+    const kind = o.p === max ? "ok" : o.p > 0 ? "part" : "bad";
+    if (kind !== "ok") { const bo = q.opts.find(x => x.p === max); wrongs.push({ st: q.st, q: q.text, picked: o.t, best: bo.t, why: bo.fb, part: kind === "part" }); }
+    if (kind === "part") { b.classList.add("picked-part"); b.querySelector(".mark").textContent = "△"; }
+    if (kind === "bad") { b.classList.add("picked-bad"); b.querySelector(".mark").textContent = "✗"; }
+    streak = kind === "ok" ? streak + 1 : 0;
+    const verdict = kind === "ok" ? (max > 1 ? "最佳選擇" : "答對了") : kind === "part" ? "接近了，再想想" : "再想想";
+    total += o.p; sScore[q.st] += o.p;
+    document.getElementById("fb").innerHTML = `<div class="fb ${kind}"><strong>${verdict}${o.p ? `　+${o.p} 分` : ""}${kind === "ok" && streak >= 3 ? `　連對 ×${streak}` : ""}</strong>${o.fb}</div>`;
+    const last = qi === QS.length - 1 || QS[qi + 1].st !== q.st;
+    const n = document.getElementById("next");
+    n.hidden = false; n.textContent = last ? "領取通關章" : "下一題";
+    n.onclick = () => { if (last) stageDone(q.st); else { qi++; question(); } };
+    n.scrollIntoView({ block: "nearest", behavior: reduce ? "auto" : "smooth" });
+  };
+}
+
+function stageDone(s) {
+  const ok = passed(s), last = s === 4, st = STAGES[s];
+  const cs = CASES.map((c, i) => ({ c, i })).filter(x => x.c.st === s);
+  qi = Math.min(qi + 1, QS.length);
+  mount(`
+    ${topbar()}
+    ${passport(s + 1, s + 1)}
+    <section class="result">
+      <p class="kicker" style="color:var(${st.c})">關卡 ${s + 1}／5　${st.name}</p>
+      <div class="pop">${stamp(s, 160, true)}</div>
+      <h2>${ok ? "這一關放行" : "這一關需要補件"}</h2>
+      <p class="score">${sScore[s]}<small> ／ ${stageMax[s]}</small></p>
+      <div class="recap" style="background:var(${st.t});color:var(${st.c})"><p style="color:var(--ink)">${st.recap}</p>${ILL[s](st.c)}</div>
+    </section>
+    <div class="sec-h">新解鎖：案件檔案<small>${cs.length} 份</small></div>
+    ${cs.map((x, k) => caseHTML(x.c, x.i, k === 0)).join("")}
+    <button class="btn" id="go">${last ? "看總成績" : "前往下一關"}</button>`, "h2");
+  if (ok) confetti(CONF, 70);
+  document.getElementById("go").onclick = () => { if (last) end(); else question(); };
+}
+
+function medal(r) {
+  const [a, b, label] = r >= 0.9 ? ["#f3cf68", "#c8962a", "金"] : r >= 0.65 ? ["#dfe6ee", "#9aa8b8", "銀"] : ["#e0a878", "#a8693a", "銅"];
+  return `<svg viewBox="0 0 100 120" width="132" height="158" role="img" aria-label="${label}牌">
+    <path d="M30 4h14l10 38H38z" fill="#c8553d"/><path d="M70 4H56L46 42h16z" fill="#2f5d9a"/>
+    <circle cx="50" cy="76" r="36" fill="${b}"/><circle cx="50" cy="76" r="31" fill="${a}"/><circle cx="50" cy="76" r="25" fill="none" stroke="${b}" stroke-width="1.5" stroke-dasharray="3 3"/>
+    <polygon points="50,58 54.4,70.8 68,71 57.2,79.3 61.1,92.5 50,84.8 38.9,92.5 42.8,79.3 32,71 45.6,70.8" fill="${b}"/></svg>`;
+}
+
+function end() {
+  const r = total / TOTAL_MAX;
+  const rank = r >= 0.9 ? "人權守護者" : r >= 0.65 ? "ESG 小尖兵" : "通關新手";
+  const note = r >= 0.9 ? "幾乎全部放行，已經能用人權的角度看企業了。" : r >= 0.65 ? "觀念大致到位，補件的關卡值得再看一次。" : "別擔心，回頭看看解說，再玩一次會更順。";
+  const FIX = ["#8fb2e0", "#4cc2b2", "#f0b24a", "#ee7d66", "#b5a2e8"];
+  qi = QS.length;
+  mount(`
+    ${topbar("full")}
+    <section class="sc" id="sc" aria-label="通關成績卡">
+      <div class="t">HUMAN RIGHTS CHECKPOINT · 通關成績卡</div>
+      <div class="pop float">${medal(r)}</div>
+      <div class="rk">${rank}</div>
+      <div class="sn">${total}<span style="opacity:.7;font-size:1rem"> ／ ${TOTAL_MAX}</span></div>
+      <div class="sg">${STAGES.map((s, i) => `<figure>${stamp(i, 56, false, undefined, passed(i) ? FIX[i] : "rgba(255,255,255,.55)")}<span>${s.name}</span></figure>`).join("")}</div>
+      <p class="nt" id="scNote" hidden></p>
+      <p class="nm" id="scName" hidden></p>
+      <div class="ft">人權與公司治理及 ESG 社會責任　演講心得遊戲</div>
+    </section>
+    <p class="hint">${note}　截圖就能存下這張成績卡。</p>
+    <div class="field"><label for="nm">名字（選填）</label><input id="nm" maxlength="12" placeholder="例如：小明" autocomplete="off"></div>
+    <div class="field"><label for="nt">一句話心得（選填）</label><input id="nt" maxlength="40" placeholder="例如：人權是每個人的權利，不是施捨" autocomplete="off"></div>
+    <div class="sec-h">錯題回顧<small>${wrongs.length} 題</small></div>
+    ${wrongs.length ? wrongs.map(w => `<div class="rev"><div class="st">${STAGES[w.st].name}</div><div class="q">${w.q}</div><div class="you">你的答案：${w.picked}${w.part ? "（接近，但不是最佳）" : ""}</div><div class="ans">較佳答案：${w.best}</div><div>${w.why}</div></div>`).join("") : `<div class="rev">全部答對，沒有需要回顧的題目。</div>`}
+    <div class="sec-h">案件檔案<small>${CASES.length} 份</small></div>
+    ${CASES.map((c, i) => caseHTML(c, i, false)).join("")}
+    <ol class="take">
+      <li>人權是權利，不是施捨，也是 SDGs 與 ESG 的基礎。</li>
+      <li>公司治理看透明度、責任制、公平原則，並顧及所有利害關係人。</li>
+      <li>合法不等於符合國際人權標準，供應鏈任何一環出問題都可能被扣貨。</li>
+    </ol>
+    <button class="btn" id="again">再玩一次</button>`, "#sc");
+  if (r >= 0.65) confetti(CONF, 120);
+  const bind = (id, out, wrap) => document.getElementById(id).oninput = e => { const v = e.target.value.trim(), el = document.getElementById(out); el.textContent = v ? wrap(v) : ""; el.hidden = !v; };
+  bind("nm", "scName", v => "— " + v);
+  bind("nt", "scNote", v => "「" + v + "」");
+  document.getElementById("again").onclick = start;
+}
+
+start();
+</script>
+</body></html>
